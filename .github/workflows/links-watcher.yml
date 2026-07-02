@@ -21,8 +21,8 @@ jobs:
         with:
           args: >-
             --verbose --no-progress --max-concurrency 2 --max-retries 4
-            --retry-wait-time 2s --timeout 30s --host-concurrency 1
-            --host-request-interval 1s --cache --max-cache-age 7d
+            --retry-wait-time 2 --timeout 30 --host-concurrency 1
+            --host-request-interval 1 --cache --max-cache-age 7d
             --exclude-link-local --exclude-loopback './**/*.md'
             --exclude portal.azure.com --exclude developers.sap.com
             --exclude shell.azure.com
