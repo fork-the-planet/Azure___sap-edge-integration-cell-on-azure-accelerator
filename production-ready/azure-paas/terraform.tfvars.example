@@ -1,0 +1,55 @@
+# Production example values for PostgreSQL + Redis PaaS delta.
+# Copy to terraform.tfvars and replace placeholder values.
+
+resource_group_name = "rg-eic-prod-paas"
+location            = "swedencentral"
+
+# Common resource tags
+# tags = {
+#   environment = "prod"
+#   workload    = "sap-eic"
+#   owner       = "platform-team"
+# }
+
+# DNS strategy:
+# true  = create private DNS zones in this module and link to vnet_id
+# false = reuse existing private DNS zones via the existing_* variables
+create_private_dns_zones = true
+
+# Required when create_private_dns_zones = true
+vnet_id = "/subscriptions/<subscription-id>/resourceGroups/<network-rg>/providers/Microsoft.Network/virtualNetworks/<vnet-name>"
+
+# Required when create_private_dns_zones = false
+# existing_postgres_private_dns_zone_id = "/subscriptions/<subscription-id>/resourceGroups/<dns-rg>/providers/Microsoft.Network/privateDnsZones/privatelink.postgres.database.azure.com"
+# existing_redis_private_dns_zone_id    = "/subscriptions/<subscription-id>/resourceGroups/<dns-rg>/providers/Microsoft.Network/privateDnsZones/privatelink.redis.cache.windows.net"
+
+# PostgreSQL Flexible Server
+postgres_server_name                  = "pg-eic-prod-001"
+postgres_database_name                = "eic"
+postgres_admin_username               = "pgadmin"
+postgres_sku_name                     = "GP_Standard_D2s_v3"
+postgres_storage_mb                   = 131072
+postgres_backup_retention_days        = 14
+postgres_geo_redundant_backup_enabled = false
+postgres_version                      = "16"
+postgres_zone                         = "1"
+postgres_standby_zone                 = "2"
+postgres_ha_enabled                   = true
+
+# Subnet delegated to Microsoft.DBforPostgreSQL/flexibleServers
+postgres_delegated_subnet_id = "/subscriptions/<subscription-id>/resourceGroups/<network-rg>/providers/Microsoft.Network/virtualNetworks/<vnet-name>/subnets/<postgres-delegated-subnet>"
+
+# Azure Managed Redis
+redis_name                       = "redis-eic-prod-001"
+redis_sku_name                   = "Premium"
+redis_family                     = "P"
+redis_capacity                   = 1
+redis_minimum_tls_version        = "1.2"
+redis_private_endpoint_subnet_id = "/subscriptions/<subscription-id>/resourceGroups/<network-rg>/providers/Microsoft.Network/virtualNetworks/<vnet-name>/subnets/<private-endpoints-subnet>"
+
+# Optional: set zones only if supported for your selected region/SKU
+redis_zones = []
+
+# Optional: store generated secrets in Key Vault
+store_secrets_in_key_vault = false
+# key_vault_id = "/subscriptions/<subscription-id>/resourceGroups/<security-rg>/providers/Microsoft.KeyVault/vaults/<kv-name>"
